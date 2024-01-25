@@ -1,0 +1,34 @@
+---
+title: "FirstMarkdown"
+author: "Alexander Kissonergis"
+date: "2024-01-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#we can use LaTeX to create proper looking equations and. greek symbols using two $ operators on either side of the equation, see notes in the online lecture series, specifically the Markdown lectures. EX: $$xxxxxxx$$
+
+
+#Sometimes we want to mix the mathematical symbols with plain text font, to do this in LaTeX we must use a structure called "mbox" to keep the string separate from being considered a variable. 
+
+#you can embed LaTeX in line $\pi + 3$ as such
+#we can also use markdown fencing in line with a single backtick `pi + 3`
+#see notes for the difference in the above two, the second does not show the greek symbol for pi
+
+#we can even execute r code inside of markdown text with `r pi + 3` this will return the output of pi + 3
+
+
+```{r} 
+#this creates an r chunk 
+
+Pred <- seq(1,10)  #make a vector of integers from 1 to 10
+Res <- runif(10)   #generate 10 draws from a random uniform (0,1) distribution
+
+#print the random numbers
+print(Res)
+
+
