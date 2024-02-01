@@ -1,0 +1,34 @@
+---
+title: "Homework_3"
+author: "Alexander Kissonergis"
+date: "2024-01-31"
+output: html_document
+---
+
+```{r}
+#1)
+
+#First String    Second      1.22      3.4
+#Second          More Text   1.555555  2.2220
+#Third           x           3         124
+
+
+#First String,Second,1.22,3.4
+#Second,More Text,1.555555,2.2220
+#Third,x,3,124
+
+#Find: [ \t]{2,}
+#Replace: ,
+```
+
+```{r}
+#2)
+
+# Ballif, Bryan, University of Vermont
+# Ellison, Aaron, Harvard Forest
+# Record, Sydne, Bryn Mawr
+
+#Find: (\w*\s*), (\w*\s*), (.*)
+#Replace: \2 \1 (\3)
+```
+

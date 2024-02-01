@@ -31,4 +31,30 @@ Res <- runif(10)   #generate 10 draws from a random uniform (0,1) distribution
 #print the random numbers
 print(Res)
 
+char2seed("green tea")
+char2seed("green tea", set=FALSE)
+
+#Global Variables
+nRep <- 10000
+```
+
+CTRL RET
+-to run a single line of code
+
+CTRL SHIFT RETURN
+-to source and echo entire script
+
+CTRL SHIFT S
+-executed the entire script, gives us source command (without echo), the only output is something that used the print function
+
+CTRL SHIFT C
+-comment and un comment selected lines of code
+
+```{r}
+#first chunk
+
+print(pi)
+pi + 3
+
+```
 
