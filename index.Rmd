@@ -11,3 +11,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 This is the link for assignment 1: [Link](newpage.html)
+This is the link for assignment 3: [Link](Homework_3.html)

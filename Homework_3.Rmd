@@ -2,33 +2,61 @@
 title: "Homework_3"
 author: "Alexander Kissonergis"
 date: "2024-01-31"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
+1)
+Here, we are finding two sequences of two or more spaces consecutively and turning them into a single comma. This will separate the character strings by only a comma and nothing else. 
 
 ```{r}
-#1)
-
-#First String    Second      1.22      3.4
-#Second          More Text   1.555555  2.2220
-#Third           x           3         124
-
-
-#First String,Second,1.22,3.4
-#Second,More Text,1.555555,2.2220
-#Third,x,3,124
-
 #Find: [ \t]{2,}
 #Replace: ,
 ```
 
+
+2)
+Here, we are finding three groups, a word followed by zero or more characters, another word followed by zero or more characters, and a third that finds anything after the second comma and space. We are replacing the original with a line that separates the names by spaces, and then adds the university name in parenthesis afterwards. 
 ```{r}
-#2)
-
-# Ballif, Bryan, University of Vermont
-# Ellison, Aaron, Harvard Forest
-# Record, Sydne, Bryn Mawr
-
 #Find: (\w*\s*), (\w*\s*), (.*)
 #Replace: \2 \1 (\3)
 ```
 
+
+3)
+Here, we are finding a string that equals mp3, and adding a return. It is important to note that while you cannot see it, we are eating a single "space" from the original string in the process. 
+```{r}
+#Find: mp3
+#Replace: mp3\r
+```
+
+
+4)
+Here, we are finding four digits followed by zero or more characters, and replacing it with the content of the second manipulation, an underscore, and subsequently the content of the first manipulation. 
+```{r}
+#Find:  (\d{4}) ((\w*\s*)*)
+#Replace: \2_\1
+```
+
+
+5)
+Here, we are finding a single word character, a second character, a decimal numeral, and a numeral with zero or more digits. We are replacing with the first manipulation, an underscore, the second manipulation, a comma, and the fourth manipulation. 
+```{r}
+#Find: (\w)\w+,(\w+),(\d*.\d*),(\d*)
+#Replace: \1_\2,\4
+```
+
+
+6)
+Here, we are finding a similar thing but the second group will have exactly four characters followed by additional characters, essentially specifying by looking for the first four characters of the string. We are replacing with the same as the last time, the first manipulation, an underscore, the second manipulation, a comma, and the fourth manipulation.
+```{r}
+#Find: (\w)\w+,(\w{4})\w+,(\d*.\d*),(\d*)
+#Replace: \1_\2,\4
+```
+
+7)
+Here, we are finding the first thee characters of the first two words, followed by additional characters. The third and fourth groups are the same as before. We are replacing with the first manipulation, the second manipulation, a comma AND a space, the fourth manipulation, a comma AND a space, and the third manipulation. 
+```{r}
+#Find: (\w{3})\w+,(\w{3})\w+,(\d*.\d*),(\d*)
+#Replace: \1\2, \4, \3
+```
