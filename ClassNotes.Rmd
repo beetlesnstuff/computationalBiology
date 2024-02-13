@@ -269,3 +269,98 @@ seq_len(5) #this is also faster than 1:5
 
 #continued, see above
 ```
+
+```{r}
+#lists are atomic vectors but each element can hold things of different types and sizes
+
+myList <- list(1:10, matrix(1:8, nrow=4,byrow=TRUE), letters[1:3],pi)
+str(myList)
+print(myList)
+
+#using [] gives you a single item, which is of type list
+myList[4]
+#myList[4] - 3
+
+#single brackets gives you only the element in that slot, which is always of type list
+
+# to grab the object itself, use [[]]
+
+myList[[4]]
+
+myList[[4]] - 3
+
+#if a list has 10 elements it is like a trian with 10 cars
+#if we want to work with the contents of car #5 we use [[5]]
+#[5] gives you a train with just car 5
+#[c(4,5,6)] gives you just a little train with cars 4,5,6
+
+myList[[2]]
+myList[[2]][4,1]
+
+#name list items when they are created
+myList2 <- list(Tester=FALSE, littleM=matrix(1:9,nrow=3))
+
+myList2$littleM[2,3] #get row 2, columns
+
+myList2$littleM
+
+myList2$littleM[2,] #show second row, all columns
+myList2$littleM[2] #what does this give? 
+myList2$littleM[5]
+
+#The "unlist" strings everythihng back into a single atomic vector; coercion is used if there are mixed data types
+
+unRolled <- unlist(myList2)
+print(unRolled)
+
+#the most common use of a list: output from a linear model is a list
+
+library(ggplot2)
+yVar <- runif(10)
+xVar <- runif(10)
+myModel <- lm(yVar~xVar)
+qplot(x=xVar,y=yVar)
+
+print(myModel)
+
+#full results are in summary
+print(summary(myModel)) 
+
+str(summary(myModel))
+summary(myModel)$coefficients
+summary(myModel)$coefficients["xVar","Pr(>|t|)"]
+summary(myModel)$coefficients[2,4]
+
+u <- unlist(summary(myModel))
+print(u)
+
+mySlope <- u$coefficients2
+myPval <- u$coefficients8
+
+#data frames are lists of equal length atomic vectors, each of which is a column
+
+varA <- 1:12
+varB <- rep(c("Con", "LowN", "HighN"), each=4)
+varC <- runif(12)
+
+dFrame <- data.frame(varA,varB,varC)
+print(dFrame)
+str(dFrame)
+head(dFrame)
+
+#add another row with rbind
+#make sure you add a list, with each item corresponding to a column
+
+newData <- data.frame(list(varA=13,varB="HighN", varC=0.668))
+print(newData)
+str(newData)
+
+# now bind them
+dframe <- rbind(dFrame,newData)
+str(dFrame)
+tail(dFrame)
+
+#see notes on dataframes from feb 13 lecture
+
+
+```
