@@ -14,21 +14,21 @@ library(MASS) # for maximum likelihood estimation
 
 # quick and dirty, a truncated normal distribution to work on the solution set
 
-y <- rnorm(n=3000,mean=0.2)
-y <- data.frame(1:3000,y)
-names(y) <- list("ID","myVar")
-y <- y[y$myVar>0,]
-str(y)
-summary(y$myVar)
+z <- rnorm(n=3000,mean=0.2)
+z <- data.frame(1:3000,z)
+names(z) <- list("ID","myVar")
+z <- z[z$myVar>0,]
+str(z)
+summary(z$myVar)
 
 #plotting histogram of data
-p1test <- ggplot(data=y, aes(x=myVar, y=..density..)) +
+p1 <- ggplot(data=z, aes(x=myVar, y=..density..)) +
   geom_histogram(color="grey60",fill="cornsilk",size=0.2) 
-print(p1test)
+print(p1)
 
 #adding empirical density curve
-p1test <-  p1test +  geom_density(linetype="dotted",size=0.75)
-print(p1test)
+p1 <-  p1 +  geom_density(linetype="dotted",size=0.75)
+print(p1)
 
 #getting maximum likelihood parameters for normal
 normPars <- fitdistr(z$myVar,"normal")
