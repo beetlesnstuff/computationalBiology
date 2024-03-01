@@ -1,0 +1,193 @@
+---
+title: "Homework_6"
+author: "Alexander Kissonergis"
+date: "2024-03-01"
+output: html_document
+---
+The data I used for this assignment I pulled from dryad:
+Coverdale, Tyler; Agrawal, Anurag (2022). Data from: Experimental insect suppression causes loss of induced, but not constitutive, resistance in Solanum carolinense [Dataset]. Dryad.
+
+Following the code given in the first part of the homework:
+```{r}
+library(ggplot2) # for graphics
+library(MASS) # for maximum likelihood estimation
+
+# quick and dirty, a truncated normal distribution to work on the solution set
+
+y <- rnorm(n=3000,mean=0.2)
+y <- data.frame(1:3000,y)
+names(y) <- list("ID","myVar")
+y <- y[y$myVar>0,]
+str(y)
+summary(y$myVar)
+
+#plotting histogram of data
+p1test <- ggplot(data=y, aes(x=myVar, y=..density..)) +
+  geom_histogram(color="grey60",fill="cornsilk",size=0.2) 
+print(p1test)
+
+#adding empirical density curve
+p1test <-  p1test +  geom_density(linetype="dotted",size=0.75)
+print(p1test)
+
+#getting maximum likelihood parameters for normal
+normPars <- fitdistr(z$myVar,"normal")
+print(normPars)
+str(normPars)
+normPars$estimate["mean"] # note structure of getting a named attribute
+
+#plotting normal probability density
+meanML <- normPars$estimate["mean"]
+sdML <- normPars$estimate["sd"]
+
+xval <- seq(0,max(z$myVar),len=length(z$myVar))
+
+ stat <- stat_function(aes(x = xval, y = ..y..), fun = dnorm, colour="red", n = length(z$myVar), args = list(mean = meanML, sd = sdML))
+ p1 + stat
+ 
+#plotting exponential probability density
+expoPars <- fitdistr(z$myVar,"exponential")
+rateML <- expoPars$estimate["rate"]
+
+stat2 <- stat_function(aes(x = xval, y = ..y..), fun = dexp, colour="blue", n = length(z$myVar), args = list(rate=rateML))
+ p1 + stat + stat2 
+ 
+#plotting uniform probability density
+stat3 <- stat_function(aes(x = xval, y = ..y..), fun = dunif, colour="darkgreen", n = length(z$myVar), args = list(min=min(z$myVar), max=max(z$myVar)))
+ p1 + stat + stat2 + stat3
+ 
+#plotting gamma probability density
+gammaPars <- fitdistr(z$myVar,"gamma")
+shapeML <- gammaPars$estimate["shape"]
+rateML <- gammaPars$estimate["rate"]
+
+stat4 <- stat_function(aes(x = xval, y = ..y..), fun = dgamma, colour="brown", n = length(z$myVar), args = list(shape=shapeML, rate=rateML))
+ p1 + stat + stat2 + stat3 + stat4
+ 
+#plotting beta probability density
+pSpecial <- ggplot(data=z, aes(x=myVar/(max(myVar + 0.1)), y=..density..)) +
+  geom_histogram(color="grey60",fill="cornsilk",size=0.2) + 
+  xlim(c(0,1)) +
+  geom_density(size=0.75,linetype="dotted")
+
+betaPars <- fitdistr(x=z$myVar/max(z$myVar + 0.1),start=list(shape1=1,shape2=2),"beta")
+shape1ML <- betaPars$estimate["shape1"]
+shape2ML <- betaPars$estimate["shape2"]
+
+statSpecial <- stat_function(aes(x = xval, y = ..y..), fun = dbeta, colour="orchid", n = length(z$myVar), args = list(shape1=shape1ML,shape2=shape2ML))
+pSpecial + statSpecial
+ 
+```
+
+And with data from dryad 
+```{r}
+z <- read.csv("Supplemental_Data_2.csv",header=TRUE,sep=",")
+str(z)
+summary(z)
+
+p1 <- ggplot(data = z, aes(x = Mean.height..cm.)) +
+geom_histogram(aes(fill = Mean...prickles), color = "grey60", bins = 30) +
+scale_fill_gradient(low = "cornsilk", high = "cornflowerblue") + # Gradient fill color
+labs(x = "Mean Height (cm)", y = "Frequency") 
+print(p1)
+
+#plotting histogram of data
+p1 <- ggplot(data = z, aes(x = Mean.height..cm.)) +
+geom_histogram(color="grey60",fill="cornsilk",size=0.2) 
+print(p1)
+
+#adding empirical density curve
+p1 <-  p1 +  geom_density(linetype="dotted",size=0.75)
+print(p1)
+
+#getting maximum likelihood parameters for normal
+normPars <- fitdistr(z$Mean.height..cm.,"normal")
+print(normPars)
+str(normPars)
+normPars$estimate["mean"] # note structure of getting a named attribute
+
+#plotting normal probability density
+meanML <- normPars$estimate["mean"]
+sdML <- normPars$estimate["sd"]
+
+xval <- seq(0,max(z$Mean.height..cm.),len=length(z$Mean.height..cm.))
+
+stat <- stat_function(aes(x = xval, y = Mean.height..cm.), fun = dnorm, colour="red", n = length(z$Mean.height..cm.), args = list(mean = meanML, sd = sdML))
+p1 + stat
+ 
+#plotting exponential probability density
+expoPars <- fitdistr(z$Mean.height..cm.,"exponential")
+rateML <- expoPars$estimate["rate"]
+
+stat2 <- stat_function(aes(x = xval, y = Mean.height..cm.), fun = dexp, colour="blue", n = length(z$Mean.height..cm.), args = list(rate=rateML))
+p1 + stat + stat2 
+ 
+#plotting uniform probability density
+stat3 <- stat_function(aes(x = xval, y = Mean.height..cm.), fun = dunif, colour="darkgreen", n = length(z$Mean.height..cm.), args = list(min=min(z$Mean.height..cm.), max=max(z$Mean.height..cm.)))
+p1 + stat + stat2 + stat3
+ 
+#plotting gamma probability density
+gammaPars <- fitdistr(z$Mean.height..cm.,"gamma")
+shapeML <- gammaPars$estimate["shape"]
+rateML <- gammaPars$estimate["rate"]
+
+stat4 <- stat_function(aes(x = xval, y = Mean.height..cm.), fun = dgamma, colour="purple", n = length(z$Mean.height..cm.), args = list(shape=shapeML, rate=rateML))
+p1 + stat + stat2 + stat3 + stat4 
+
+#plotting beta probability density
+pSpecial <- ggplot(data=z, aes(x=Mean.height..cm./(max(Mean.height..cm. + 0.1)), y=Mean.height..cm.)) +
+geom_histogram(color="grey60",fill="cornsilk",size=0.2) + 
+xlim(c(0,1)) +
+geom_density(size=0.75,linetype="dotted")
+
+betaPars <- fitdistr(x=z$Mean.height..cm./max(z$Mean.height..cm. + 0.1),start=list(shape1=1,shape2=2),"beta")
+shape1ML <- betaPars$estimate["shape1"]
+shape2ML <- betaPars$estimate["shape2"]
+
+statSpecial <- stat_function(aes(x = xval, y = Mean.height..cm.), fun = dbeta, colour="orchid", n = length(z$Mean.height..cm.), args = list(shape1=shape1ML,shape2=shape2ML))
+#pSpecial + statSpecial
+ 
+```
+
+The normal distribution looks like it fits the best, so I will go with that one. 
+
+Mean = 26.4
+SD = 4.05
+
+Now creating another data set with the parameters from the normal distribution. 
+
+```{r}
+y <- rnorm(n=15,mean=26.4,sd=4.05)
+y <- data.frame(1:15,y)
+names(y) <- list("ID","myVar")
+y <- y[y$myVar>0,]
+str(y)
+summary(y$myVar)
+
+#plotting histogram of data
+p1normal <- ggplot(data=y, aes(x=myVar, y=..density..)) +
+  geom_histogram(color="grey60",fill="cornsilk",size=0.2) 
+print(p1normal)
+
+#adding empirical density curve
+p1normal <-  p1normal +  geom_density(linetype="dotted",size=0.75)
+print(p1normal)
+
+#getting maximum likelihood parameters for normal
+normPars <- fitdistr(y$myVar,"normal")
+print(normPars)
+str(normPars)
+normPars$estimate["mean"] # note structure of getting a named attribute
+
+#plotting normal probability density
+meanML <- normPars$estimate["mean"]
+sdML <- normPars$estimate["sd"]
+
+xval <- seq(0,max(y$myVar),len=length(y$myVar))
+
+ stat <- stat_function(aes(x = xval, y = ..y..), fun = dnorm, colour="red", n = length(y$myVar), args = list(mean = meanML, sd = sdML))
+ p1 + stat
+ 
+```
+
+The histogram profiles appear to be similar. I do think that in the future I will use a larger data set. Part of the problem with my lack of comfort with the results is the lack of data, there are very few data points, something I didn't think about much when I pulled the data. This makes me unsure about the entire thing. 

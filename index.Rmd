@@ -18,3 +18,4 @@ This is the link for assignment 4: [Link](Homework_4.html)
 
 This is the link for assignment 5: [Link](Homework_5.html)
 
+This is the link for assignment 6: [Link](Homework_6.html)
