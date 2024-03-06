@@ -1,0 +1,252 @@
+---
+title: "Homework_7"
+author: "Alexander Kissonergis"
+date: "2024-03-06"
+output: html_document
+---
+Here I will be creating a data set that might mimic the hormetic effects we see after an insect has had exposure to pesticide. We should see a dramatic difference in cell count response, with the treatment showing a higher cell count. The numbers are highly dependent on the methods used, so in this case, I am using numbers that are arbitrarily matching patterns.
+
+```{r}
+#loading in ggplot
+library(ggplot2)
+
+#setting a seed for reproducible data
+set.seed(190)
+
+# creating my treatment groups, here I am using SD to define the range instead of what we did in class
+control <- rnorm(100, mean = 25000, sd = 1000)
+treated <- rnorm(100, mean = 30000, sd = 1000)
+
+# Create sample IDs
+sample_ids <- paste(1:200)
+
+#  creating a dataframe named z in the spirit of continuing the classes methods, I am using a
+z <- data.frame(
+  Sample_ID = sample_ids,
+  Group = rep(c("Control", "Treated"), each = 100),
+  Cell_Count = c(control, treated)
+)
+
+# the creation of the histogram from last class is a bit confusing so using this method from ggplot instead
+OG_plot <- ggplot(z, aes(x = Cell_Count, fill = Group)) +
+  geom_histogram(binwidth = 500, position = "dodge", color = "black") +
+  labs(title = "Histogram of Cell Count by Treatment Group",
+       x = "Cell Count", y = "Frequency") +
+  scale_fill_manual(values = c("Control" = "blue", "Treated" = "red")) +
+  theme_minimal()
+
+print(OG_plot)
+
+#adding a geom den curve, however, this doesn't seem to be following the trend, perhaps since the two treatments are so different?
+
+OG_plot <-  OG_plot +  geom_density(linetype="dotted",size=0.75)
+print(OG_plot)
+
+```
+
+Since I am just trying to compare the mean cell counts between the two treatments, I will use an ANOVA
+
+```{r}
+#running an anova
+
+anova <- aov(Cell_Count ~ Group, data = z)
+summary(anova)
+
+```
+Testing out different means and retesting anova
+```{r}
+#testing out different means
+
+#setting a seed for reproducible data
+set.seed(190)
+
+# creating my treatment groups, here I am using SD to define the range instead of what we did in class
+control <- rnorm(100, mean = 25000, sd = 1000)
+treated <- rnorm(100, mean = 27000, sd = 1000)
+
+# Create sample IDs
+sample_ids <- paste(1:200)
+
+#  creating a dataframe named z in the spirit of continuing the classes methods, I am using a
+z2 <- data.frame(
+  Sample_ID = sample_ids,
+  Group = rep(c("Control", "Treated"), each = 100),
+  Cell_Count = c(control, treated)
+)
+
+# the creation of the histogram from last class is a bit confusing so using this method from ggplot instead
+OG_plot2 <- ggplot(z2, aes(x = Cell_Count, fill = Group)) +
+  geom_histogram(binwidth = 500, position = "dodge", color = "black") +
+  labs(title = "Histogram of Cell Count by Treatment Group",
+       x = "Cell Count", y = "Frequency") +
+  scale_fill_manual(values = c("Control" = "blue", "Treated" = "red")) +
+  theme_minimal()
+
+print(OG_plot2)
+
+anova2 <- aov(Cell_Count ~ Group, data = z2)
+
+```
+
+Ok, we STILL aren't close, I am going to make the means even closer since we are still getting a very (near 0) significant result
+
+```{r}
+#setting a seed for reproducible data
+set.seed(190)
+
+# creating my treatment groups, here I am using SD to define the range instead of what we did in class
+control <- rnorm(100, mean = 25000, sd = 1000)
+treated <- rnorm(100, mean = 25555, sd = 1000)
+
+# Create sample IDs
+sample_ids <- paste(1:200)
+
+#  creating a dataframe named z in the spirit of continuing the classes methods, I am using a
+z3 <- data.frame(
+  Sample_ID = sample_ids,
+  Group = rep(c("Control", "Treated"), each = 100),
+  Cell_Count = c(control, treated)
+)
+
+# the creation of the histogram from last class is a bit confusing so using this method from ggplot instead
+OG_plot3 <- ggplot(z3, aes(x = Cell_Count, fill = Group)) +
+  geom_histogram(binwidth = 500, position = "dodge", color = "black") +
+  labs(title = "Histogram of Cell Count by Treatment Group",
+       x = "Cell Count", y = "Frequency") +
+  scale_fill_manual(values = c("Control" = "blue", "Treated" = "red")) +
+  theme_minimal()
+
+print(OG_plot3)
+
+anova3 <- aov(Cell_Count ~ Group, data = z3)
+summary(anova3)
+```
+It's STILL significant, and hasn't changed in the degree. I will try again. Ok, the results are no longer significant, I will move back upwards in the mean. 
+```{r}
+#setting a seed for reproducible data
+set.seed(190)
+
+# creating my treatment groups, here I am using SD to define the range instead of what we did in class
+control <- rnorm(100, mean = 25000, sd = 1000)
+treated <- rnorm(100, mean = 25250, sd = 1000)
+
+# Create sample IDs
+sample_ids <- paste(1:200)
+
+#  creating a dataframe named z in the spirit of continuing the classes methods, I am using a
+z4 <- data.frame(
+  Sample_ID = sample_ids,
+  Group = rep(c("Control", "Treated"), each = 100),
+  Cell_Count = c(control, treated)
+)
+
+# the creation of the histogram from last class is a bit confusing so using this method from ggplot instead
+OG_plot4 <- ggplot(z4, aes(x = Cell_Count, fill = Group)) +
+  geom_histogram(binwidth = 500, position = "dodge", color = "black") +
+  labs(title = "Histogram of Cell Count by Treatment Group",
+       x = "Cell Count", y = "Frequency") +
+  scale_fill_manual(values = c("Control" = "blue", "Treated" = "red")) +
+  theme_minimal()
+
+print(OG_plot4)
+
+anova4 <- aov(Cell_Count ~ Group, data = z4)
+summary(anova4)
+```
+
+It looks like right around 25450 (probably a bit before) is where we start to get a significant difference (one asterisk on the output, p = 0.0108 *). So it seems we can get around a mean difference of 450 cells for the effects size. 
+```{r}
+#setting a seed for reproducible data
+set.seed(190)
+
+# creating my treatment groups, here I am using SD to define the range instead of what we did in class
+control <- rnorm(100, mean = 25000, sd = 1000)
+treated <- rnorm(100, mean = 25450, sd = 1000)
+
+# Create sample IDs
+sample_ids <- paste(1:200)
+
+#  creating a dataframe named z in the spirit of continuing the classes methods, I am using a
+z5 <- data.frame(
+  Sample_ID = sample_ids,
+  Group = rep(c("Control", "Treated"), each = 100),
+  Cell_Count = c(control, treated)
+)
+
+# the creation of the histogram from last class is a bit confusing so using this method from ggplot instead
+OG_plot5 <- ggplot(z5, aes(x = Cell_Count, fill = Group)) +
+  geom_histogram(binwidth = 500, position = "dodge", color = "black") +
+  labs(title = "Histogram of Cell Count by Treatment Group",
+       x = "Cell Count", y = "Frequency") +
+  scale_fill_manual(values = c("Control" = "blue", "Treated" = "red")) +
+  theme_minimal()
+
+print(OG_plot5)
+
+anova5 <- aov(Cell_Count ~ Group, data = z5)
+summary(anova5)
+```
+
+ok now I will be getting rid of the seed just to test for a bit of random variation per the hw instructions. These results were extremely significant. Much different result than the last time. 
+```{r}
+
+# creating my treatment groups, here I am using SD to define the range instead of what we did in class
+control <- rnorm(100, mean = 25000, sd = 1000)
+treated <- rnorm(100, mean = 25450, sd = 1000)
+
+# Create sample IDs
+sample_ids <- paste(1:200)
+
+#  creating a dataframe named z in the spirit of continuing the classes methods, I am using a
+zRANDOM <- data.frame(
+  Sample_ID = sample_ids,
+  Group = rep(c("Control", "Treated"), each = 100),
+  Cell_Count = c(control, treated)
+)
+
+# the creation of the histogram from last class is a bit confusing so using this method from ggplot instead
+OG_plot_RANDOM <- ggplot(zRANDOM, aes(x = Cell_Count, fill = Group)) +
+  geom_histogram(binwidth = 500, position = "dodge", color = "black") +
+  labs(title = "Histogram of Cell Count by Treatment Group",
+       x = "Cell Count", y = "Frequency") +
+  scale_fill_manual(values = c("Control" = "blue", "Treated" = "red")) +
+  theme_minimal()
+
+print(OG_plot_RANDOM)
+
+anova_RANDOM <- aov(Cell_Count ~ Group, data = zRANDOM)
+summary(anova_RANDOM)
+```
+
+Trying again. And again very significant. It seems there is a wide variety of potential effect size. Running it a third time and the result was no longer significant. A fourth times showed no significance as well. A fifth time was very significant.
+
+```{r}
+
+# creating my treatment groups, here I am using SD to define the range instead of what we did in class
+control <- rnorm(100, mean = 25000, sd = 1000)
+treated <- rnorm(100, mean = 25450, sd = 1000)
+
+# Create sample IDs
+sample_ids <- paste(1:200)
+
+#  creating a dataframe named z in the spirit of continuing the classes methods, I am using a
+zRANDOM <- data.frame(
+  Sample_ID = sample_ids,
+  Group = rep(c("Control", "Treated"), each = 100),
+  Cell_Count = c(control, treated)
+)
+
+# the creation of the histogram from last class is a bit confusing so using this method from ggplot instead
+OG_plot_RANDOM <- ggplot(zRANDOM, aes(x = Cell_Count, fill = Group)) +
+  geom_histogram(binwidth = 500, position = "dodge", color = "black") +
+  labs(title = "Histogram of Cell Count by Treatment Group",
+       x = "Cell Count", y = "Frequency") +
+  scale_fill_manual(values = c("Control" = "blue", "Treated" = "red")) +
+  theme_minimal()
+
+print(OG_plot_RANDOM)
+
+anova_RANDOM <- aov(Cell_Count ~ Group, data = zRANDOM)
+summary(anova_RANDOM)
+```
+
